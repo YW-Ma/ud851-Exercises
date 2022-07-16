@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.example.android.datafrominternet.utilities.NetworkUtils;
 
+import java.io.IOException;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
@@ -56,7 +57,15 @@ public class MainActivity extends AppCompatActivity {
         URL githubSearchUrl = NetworkUtils.buildUrl(githubQuery);
         mUrlDisplayTextView.setText(githubSearchUrl.toString());
         // TODO (2) Call getResponseFromHttpUrl and display the results in mSearchResultsTextView
+        String githubQueryResults = null;
+        try {
+            githubQueryResults = NetworkUtils.getResponseFromHttpUrl(githubSearchUrl);
+            mSearchResultsTextView.setText(githubQueryResults);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         // TODO (3) Surround the call to getResponseFromHttpUrl with a try / catch block to catch an IOException
+        // 会出现：android.os.NetworkOnMainThreadException，因为network应该在自己的thread中进行（asyncTask），而不是在main UI thread.
     }
 
     @Override
